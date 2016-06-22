@@ -1,0 +1,329 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="orion-users">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+
+
+    </style>
+
+  </template>
+
+
+  <script>
+    (function() {
+      var wsUri = 'ws://browse.lab.cloudioo.net:11011';
+      var init = false;
+      Polymer({
+
+        is: 'orion-users',
+
+        properties: {
+          users : {
+            type : Object,
+            notify: true,
+            value: [
+
+              {
+                name    : 'Constance de Braquilangues',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/cbraquilanges.jpg',
+                //photo : 'https://www.google.com/landing/2step/images/why-need-img-2.png',
+                msisdn  :  'cbraquilanges@telecoming.com',
+                assists :  false,
+              },
+              {
+                name    : 'Giuseppe Sassu',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/gsassu.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'gsassu@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Lucía Oyaga',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/loyaga.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'loyaga@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Lidia Cuerva',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/lcuerva.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'lcuerva@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Ismael Ramos',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/iramos@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'ramossilvanismael@gmail.com',
+                assists :  false
+              },
+            {
+                name    : 'Alejandro Zarzalejo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/alzarzalejo@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'alzarzalejo@telecoming.com',
+                assists :  false
+              },
+              {
+                name    : 'Carolina Fernández',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/cfernandez.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'cfernandez@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Laura Salgado',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/lsalgado.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'lsalgado@telecoming.com',
+                assists :  false
+              },            
+              {
+                name    : 'Ana Luisa Mora',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/almora@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'amorajimena@gmail.com',
+                assists :  false
+              },
+
+               {
+                name    : 'Álvaro Lara',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/alara@telecoming.com.jpg',
+               // photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'alara@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Daniel Alonso',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/dalonso@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'dalonso@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Marina Gallus',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/mgallus@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'mgallus@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Carlos Buil',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/cbuil.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'cbuil@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Borja Ruiz-gago',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/bruiz.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'bruiz@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Juan Calleja',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/jcalleja.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'jcalleja@telecoming.com',
+                assists :  false
+              },              
+               {
+                name    : 'Diego de Austria',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/daustria.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'ddeaustria@gmail.com',
+                assists :  false
+              },  
+               {
+                name    : 'Ángela Rodriguez',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/arodriguez@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'arodriguez@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Miguel Calleja',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/mcalleja.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'mcalleja@telecoming.com ',
+                assists :  false
+              },
+               {
+                name    : 'Alejandro Bosch',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/abosch@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'bosch.alejandro@gmail.com',
+                assists :  false
+              },
+               {
+                name    : 'Sabrina Martini',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/smartini@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'smartini@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Arturo Zarzalejo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/azarzalejo.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'azarzalejo@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'José Manuel Casabona',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/jmcasabona.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'jmcasabona@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Vincenzo Petti',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/vpetti@telecoming.com.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'vpetti@telecoming.com',
+                assists :  false
+              },                                                            
+               {
+                name    : 'Patricia Peiró',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/ppeiro.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'ppeiro@telecoming.com',
+                assists :  false
+              },                 
+               {
+                name    : 'David Murillo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/dmurillo.jpg',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'dmurillo@telecoming.com',
+                assists :  false
+              },
+               {
+                name    : 'Christophe Cassand',
+                photo   : 'https://pbs.twimg.com/profile_images/544473928186347521/tHIX6nkd.png',
+                //photo   : 'http://www.neointec.com/wp-content/uploads/2015/06/Google.jpg',
+                msisdn  :  'ccassand@telecoming.com',
+                assists :  false
+              },                                                                                                     
+
+            ]
+          },
+
+
+        },
+        observers : [
+          'assistsEvent(users.*)'
+        ],
+        attached: function(){
+
+          this._startSocket();
+
+        },
+        ready : function(){
+
+
+        },
+        _startSocket : function(){
+
+          var myWebSocket = new WebSocket(wsUri);
+          myWebSocket.onopen = function(){
+
+            if(init==false){
+              console.warn('hola');
+              myWebSocket.send(JSON.stringify({
+                message   : 'Start',
+              }))
+              init=true;
+            }
+
+          }
+          myWebSocket.onmessage = function(){
+
+            console.warn('unparsed',arguments);
+            // console.warn('obj');
+            var data = JSON.parse(arguments[0].data);
+            console.warn('Response',data);
+             //console.log('Response socket',data)
+            if(data.type=='usermsg'){
+              // if(typeof data.msisdn == 'object'){
+              //   console.warn('dd',Array.prototype.slice.call(data.msisdn));
+              //   //data.msisdn = Array.prototype.slice.call(data.msisdn);
+              // }
+              console.warn('length',this.users.length,data.msisdn.length);
+              // for (var i = 0; i < this.users.length; i++) {
+
+              //   for(var x = 0; x< data.msisdn.length; x++){
+
+              //     if (this.users[i].msisdn == data.msisdn[x]) {
+              //         //console.log('setting',this.users[i])
+              //         //console.warn('I' , i);
+              //         console.warn('coincidence');
+              //         if(data.message=='cancel'){
+              //           console.warn('canceling assisance');
+              //           this.set('users.' + i + '.assists',false);
+              //         }else{
+              //           console.warn('setting assisance');
+              //           this.set('users.' + i + '.assists',true);
+              //         }
+                      
+              //        // this.users[i].assists = true;
+
+              //         //that.fire('assistChanged',that.users[i]);
+
+              //        // console.log('asdfasdfasdf', that.users[i]);
+              //     };
+              //   }
+              // };
+              for (var i in data.msisdn) {
+                for (var e in this.users) {
+                  if (data.msisdn[i] == this.users[e].msisdn) {
+                    console.log('ENCONTRADO', this.users[e]);
+                    if(data.message.indexOf('cancel') != -1 ){ 
+                      var indexx= data.message.indexOf('/');
+                      console.error('cancelling',data.message.slice(indexx+1,data.message.length));
+                      if(data.message.slice(indexx+1,data.message.length) == this.users[e].msisdn){
+                        this.set('users.' + e + '.assists',false);
+                      }
+                      
+                    }else{
+                      console.error('setting');
+                      this.set('users.' + e + '.assists',true);
+                    }
+                    
+                  }
+                }
+              }
+            }
+          }.bind(this);
+
+          var that = this;
+          myWebSocket.onclose = function(){
+            setTimeout(function(){
+              console.warn('restarting socket...');
+              that._startSocket();
+            },3000)
+          }
+
+        },
+        assistsEvent : function(){
+
+          
+        },
+
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

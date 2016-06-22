@@ -1,0 +1,342 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="cg-mobile_main">
+  <template>
+    <style>
+
+    :host{
+      position: relative;
+      width: 100%
+    }
+    
+    .show{
+      opacity: 1!important;
+    }
+
+    .hide{
+      opacity: 0;
+    }
+    .mobileMain{
+      width: 100%;
+      max-width: 500px;
+      margin:60px auto 0px;
+      transition:all 1s;
+    }
+    cg-assistant{
+      display: block;
+      width: 110px;
+      height: 110px;
+      margin:0px auto;
+    }
+    p{
+      color:white;
+      margin-top: 30px;
+      text-align: center;
+    }
+    .confirmar{
+      width: 100%;
+      max-width: 250px;
+      padding:1em;
+      background:#ABF8A8;
+      text-align: center;
+      margin:10px auto;
+      border-radius: 10px;
+      cursor:pointer;
+      display:block;
+      margin:0px auto;
+    }
+    .confirmar:hover{
+      background:#7BF577;
+    }
+    a{
+      text-decoration: underline;
+      cursor:pointer;
+    }
+    .footer{
+      position: relative;
+      margin:50px auto;
+      
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+    }
+    .footer a,.footer a:visited{
+      color:black;
+    }
+    .wrapConfirmar{
+      display: block;
+      transition:all 1s;
+    }
+    .wrapReload{
+      transition:all 1s;
+      display: none;
+    }
+    .wrapReload .confirmar{
+      
+      cursor:normal;
+      opacity: 0.6;
+      color:white;
+      background: #273827;
+
+    }
+    .wrapConfirmado{
+      display: none;
+     transition:all 1s; 
+    }
+    </style>
+
+    <orion-users users='{{myUser}}'></orion-users>
+    <div class="mobileMain hide">
+      <div class="userWrap">
+        <cg-assistant user="{{myUser}}" selected="{{selected}}"></cg-assistant>
+        <div class="wrapConfirmar hide">
+          <p><span>Hola, </span>{{myUserSelected(selected,'name')}}</p>
+          <p>Bienvenido a Coffees&TheGroup</p>
+          <paper-button on-tap="confirmAssistance" id="confirmUser"class="confirmar">Aceptar y Confirmar</paper-button>
+        </div>
+        <div class="wrapConfirmado hide">
+          <p>Gracias por confirmar tu asistencia a Coffees&TheGroup,espero que disfrutes con el equipo de Diseño y Desarrollo web</p>
+          <paper-button on-tap="viewAssistants" id="viewAssistants" class="confirmar">Ver asistentes</paper-button>
+          <p>Me lo he pensado mejor <a on-tap="cancelAssistance">Cancelar Asistencia</a></p>
+        </div>
+        <div class="wrapReload hide">
+          <p><span>Hola, </span>{{myUserSelected(selected,'name')}}</p>
+          <paper-button class="confirmar">Asistencia Confirmada</paper-button>
+          <p>Me lo he pensado mejor <a on-tap="cancelAssistanceReload">Cancelar Asistencia</a></p>
+        </div>        
+      </div>
+<!--       <div class="userWrap">
+        <cg-assistant user="{{myUser.0}}"></cg-assistant>
+        <p><span>Hola,</span>{{myUser.0.name}}</p>
+        <p>Bienvenido a Coffes&TheGroup</p>
+        <paper-button on-tap="confirmAssistance" id="confirmUser"class="confirmar">Confirmar Asistencia</paper-button>
+      </div> -->
+
+
+      <div class="footer">
+        <a href="#/legal">T&C</a>
+        <a href="#/legal">Política de privacidad</a>
+        <a href="#/legal">Cancelar</a>
+      </div>
+
+
+    </div>  
+  </template>
+
+  <script>
+
+    (function() {
+      var wsUri = 'ws://browse.lab.cloudioo.net:11011';
+      var myWebSocket;
+      var actualUser;
+      var dirtyCheck;
+      Polymer({
+        is: 'cg-mobile_main',
+
+        properties: {
+          myUserView : {
+            type: Object,
+            notify: true,
+            value : {}
+          },
+          selected: {
+            type: Number,
+          }
+        },
+
+        observers : [
+          'assistsEvent(myUser.*)'
+        ],
+
+        assistsEvent : function () {
+         // console.log('EVENTO', this.myUser);
+        },
+
+        attached: function(){
+
+          document.querySelector('cg-earth').style.display = 'none';
+          var wrap = this.$$('.mobileMain');
+          var wrapConfirmar = this.$$('.wrapConfirmar');
+          this.toggleClass('show',true,wrap);
+          this.toggleClass('show',true,wrapConfirmar);
+
+        },
+
+
+        ready: function(){
+          this._startSocket();
+          for (var i = 0; i < this.$$('orion-users').users.length; i++) {
+            if (this._getParam('email') == this.$$('orion-users').users[i].msisdn) {
+                //console.log(this.get(('users'+i),this.$$('orion-users'))
+                this.selected = i;
+            };
+          };
+          var that=this;
+          dirtyCheck = setInterval(function() {
+            if(that.myUser[that.selected].assists == true){
+              that.reloaded();
+              clearInterval(dirtyCheck);
+            }
+          }, 100);
+        },
+        reloaded : function(){
+          var wrapConfirmar = this.$$('.wrapConfirmar');
+          this.toggleClass('show',false, wrapConfirmar);
+          var that=this;
+
+          var fadedFn = function(){
+            if(arguments[0].propertyName == 'opacity'){
+              console.warn('TSS');
+              wrapConfirmar.removeEventListener('transitionend',fadedFn);
+              wrapConfirmar.style.display = 'none';
+              that.$$('.wrapReload').style.display = 'block';
+              setTimeout(function() {
+                that.toggleClass('show',true,that.$$('.wrapReload'));
+              }, 100);
+              
+            }  
+          }
+          console.warn('SE LANZA');
+          wrapConfirmar.addEventListener('transitionend',fadedFn);         
+        },
+        cancelAssistanceReload:function(){
+          var that=this;
+          var fadeIn = function(){
+             if(arguments[0].propertyName == 'opacity'){
+              that.$$('.wrapReload').style.display = 'none';
+              that.cancelAssistance('confirmed');
+
+             }
+          }
+
+          this.toggleClass('show',false,this.$$('.wrapReload'));
+          this.$$('.wrapReload').addEventListener('transitionend',fadeIn);   
+        },
+        _getParam: function(name){
+          name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+          var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+              results = regex.exec(location.href);
+          return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        },
+        myUserSelected:function(){
+          return this.myUser[arguments[0]][arguments[1]];
+        },
+        _startSocket : function(){
+          myWebSocket = new WebSocket(wsUri);
+          var that = this;
+          myWebSocket.onclose = function(){
+            setTimeout(function(){
+              console.warn('restarting socket...');
+              that._startSocket();
+            },3000)
+          }
+        },
+        confirmAssistance : function(notSend){
+          var that = this;
+          clearInterval(dirtyCheck)
+          console.log(this.myUser);
+         if(notSend!=='not'){
+            console.warn('SENDING');
+            myWebSocket.send(JSON.stringify({
+              message : 'confirm',
+              msisdn    : that.myUser[that.selected].msisdn
+            }))     
+          }
+
+          var obj = this.$$('orion-users');
+          //obj.set('users.2.assists',true);
+          var wrap = this.$$('.mobileMain');
+          var wrapConfirmar = this.$$('.wrapConfirmar');
+          this.toggleClass('show',false, wrapConfirmar);
+
+          var wrapConfirmarFn = function(){
+            if(arguments[0].propertyName == 'opacity' && wrapConfirmar.style.opacity == 0){
+              wrapConfirmar.removeEventListener('transitionend',wrapConfirmarFn);
+              console.warn('transition END wrapConfirmar');
+              wrapConfirmar.style.display = 'none';
+              var wrapConfirmado = that.$$('.wrapConfirmado');
+              wrapConfirmado.style.display = 'block';
+              setTimeout(function() {
+                 that.toggleClass('show',true,wrapConfirmado);
+              }, 0);
+             
+              
+            }
+          }
+
+          wrapConfirmar.addEventListener('transitionend',wrapConfirmarFn)     
+        },
+        viewAssistants: function(){
+          console.warn('viewAssistants');
+          var globalWrap = this.$$('.mobileMain');
+          this.toggleClass('show',false,globalWrap);
+          this.addEventListener('transitionend',function(){
+            if(arguments[0].propertyName == 'opacity'){
+              console.warn('ChangeView');
+              location.href = '#/mobileConfirmed';
+
+            }
+          })
+        },
+        cancelAssistance : function(view){
+          this.$$('orion-users').set('users.' + this.selected + '.assists' , false);
+          var that = this;
+          var wrapConfirmado = this.$$('.wrapConfirmado');
+
+          console.warn('tocancel0',this.myUser[this.selected].msisdn);
+          myWebSocket.send(JSON.stringify({
+            message   : ('cancel/' + this.myUser[this.selected].msisdn),
+            msisdn    : this.myUser[this.selected].msisdn
+          }))
+          var that=this;
+          setTimeout(function() {
+            myWebSocket.send(JSON.stringify({
+              message   : 'cancel',
+              msisdn    : that.myUser[that.selected].msisdn
+            }))
+          }, 1000);
+          // myWebSocket.send(JSON.stringify({
+          //   message   : 'cancel',
+          //   msisdn    : this.myUser[this.selected].msisdn
+          // }))
+          var wrapConfirmadoFn = function(){
+            if(arguments[0].propertyName == 'opacity' && wrapConfirmado.style.opacity == 0){
+              wrapConfirmado.removeEventListener('transitionend',wrapConfirmadoFn);
+              wrapConfirmado.style.display = 'none';
+              console.warn('transition END wrapConfirmado');
+              var wrapConfirmar = that.$$('.wrapConfirmar');
+              wrapConfirmar.style.display = 'block';
+              setTimeout(function() {
+                 that.toggleClass('show',true, wrapConfirmar);
+              }, 0);
+             
+            }
+          }
+
+          if(view == 'confirmed'){
+            this.$$('.wrapConfirmar').style.display = 'block';
+            setTimeout(function() {
+              that.toggleClass('show',true,that.$$('.wrapConfirmar'));
+            }, 0);
+            
+          }
+
+          this.toggleClass('show',false,wrapConfirmado);
+          wrapConfirmado.addEventListener('transitionend',wrapConfirmadoFn)
+
+          // var wrapConfirmar = this.$$('.wrapConfirmar');
+          // this.toggleClass('hide',true, wrapConfirmar);
+        }
+
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,72 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../cl-comp-api/cl-comp-api.html">
+
+<dom-module id="cl-core-catalog">
+  <template>
+    <style include="shared-styles"></style>
+    <style type="text/css">
+      :host {
+        display: block; padding: 1em;
+      }
+    </style>
+    <paper-material elevation="1">
+      <iron-ajax
+              id="ajax1"
+              last-response="{{getResponse}}"
+              handleAs="json"
+              method="POST"
+              >
+      </iron-ajax>
+    </paper-material>
+
+
+
+  </template>
+
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'cl-core-catalog',
+
+        properties: {
+          catalog: {
+            type: Object,
+          },
+          getResponse : {
+            type: Object,
+            notify: true,
+            observer: '_observerCatalog'
+          },
+          listElement : {
+            type: Object
+          }
+        },
+
+        ready: function(){
+          console.log('vista catalog');
+          console.log(this.$['ajax1']);
+          // var request = {getNewNotifications: {last: false}};
+          this.$['ajax1'].url = "../../Calumma3/app/modules/home/server/search.php";
+          this.$['ajax1'].body = JSON.stringify({
+            search: {other: ''},
+            max: 20, 
+            start: 0, 
+            orderBy: 'dsn_update_ts', 
+            order: 'desc'
+          });
+          this.$['ajax1'].generateRequest();
+        },
+
+        _observerCatalog: function () {
+          console.log('response', this.getResponse);
+          // this.listElement = this.getResponse;
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

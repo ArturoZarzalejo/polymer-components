@@ -1,0 +1,166 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/cg-assistant/cg-assistant.html">
+<link rel="import" href="../../bower_components/orion-users/orion-users.html">
+
+
+<dom-module id="cg-assistantsView">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+    .hide{
+      opacity: 0;
+    }
+    .show{
+      opacity: 1;
+    }
+    .megaWrap{
+      height: 1000px; /*polyfill*/
+      height: 100vh;
+      min-height: 100%;
+      width: 100%;
+      min-height: 100%;
+      overflow: hidden;
+    }
+    .contentWrap{
+      transition: all 2s;
+      margin: 100px auto;
+      display: block;
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    p{
+      margin:0;
+      color:white;
+    }
+    cg-assistant{
+      margin: 2em;
+      float: left;
+      position: relative;
+      display: block;
+
+    }
+      .countDownWrap{
+        display: block;
+        font-size: 16em;
+        text-align: center;
+        transform: translate(-50%,-60%);
+        position: absolute;
+        top: 40%;
+        left: 50%;
+        color:white;
+       
+      }
+ @-webkit-keyframes countdown {
+    from {font-size: 1em;}
+    to {font-size: 16em;}
+} 
+keyframes countdown {
+    from {font-size: 1em;}
+    to {font-size: 16em;}
+} 
+
+    </style>
+    <div class="megaWrap">
+    <audio id='countdown' src="../../../assets/audio/countdown.mp3"></audio>
+      <div class="contentWrap hide">
+        <orion-users users='{{allUsers}}'></orion-users>
+        <template is="dom-repeat" items="{{allUsers}}" as="user">
+            <cg-assistant style='background-color:white;border-radius:50%'user='{{user}}'></cg-assistant>
+        </template>
+      </div>
+      <div class="countDownWrap hide">
+        <h2 class="countDown"> 10!</h2>
+      </div>      
+    </div>
+  </template>
+
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'cg-assistantsView',
+
+        properties: {
+          allUsers: {
+            type: Array,
+            notify: true,
+            // observer: 'test1'
+          
+          }
+        },
+        observers : [
+          'assistsEvent(allUsers.*)'
+        ],
+        listeners: {
+          'assistChanged': 'changeAssist'
+        },
+        attached: function(){
+           window.focus();
+           
+           var wrap = this.$$('.contentWrap');
+           var that = this
+           setTimeout(function() {
+            that.toggleClass('show',true,wrap);  
+           },0);
+           var keypress = function(){
+            if(arguments[0].keyIdentifier == 'U+0034'){
+              window.removeEventListener('keypress',keypress);
+
+              that.startCountdown();
+            }
+           }
+           window.addEventListener('keypress',keypress)
+           
+        },
+        changeAssist : function(){
+          console.warn('here',arguments);
+          var elements = document.querySelectorAll('cg-assistant');
+          console.warn('elementos',elements);
+          for(var i = 0;i<elements.length;i++){
+            if(arguments[1].name == elements[i].user.name){
+              elements[i].assistanceManager(true);
+            }
+          }
+        },
+        assistsEvent : function(){
+          console.warn('changed of cg-assistant');
+        },
+        startCountdown: function(){
+          console.warn('COUNTDOWN!');
+          var that=this;
+            this.toggleClass('show',false,this.$$('.contentWrap'))
+           this.toggleClass('show',true,this.$$('.countDownWrap'))
+           var text = this.$$('.countDown');
+           var that = this;
+           var i = 10;
+           text.textContent = i.toString() + '!';
+           this.$$('.countDownWrap').style.animation = 'countdown 1s linear 11';
+
+           var interval = setInterval(function(){
+              i--;
+              text.textContent = i.toString() + '!';
+              if(i == 0){
+                setTimeout(function(){
+                  console.warn('end');
+                  that.$$('.countDownWrap').style.display = 'none';
+                  
+                },1000);
+                clearInterval(interval);
+              }
+           },1000)
+        },
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

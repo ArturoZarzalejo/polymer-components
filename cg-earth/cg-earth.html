@@ -1,0 +1,118 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="cg-earth">
+  <template>
+    <style>
+ :host{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 50%;
+    bottom: 0%;
+    transform: translate(-50%,0%);
+       /* overflow: hidden;*/
+ }
+ #earth_div{
+/*width: 4000px;
+    position: relative;
+    overflow: hidden;
+    bottom: -1051px;
+    display: block;
+    left: -1300px;*/
+    transform: translate(0,57%);
+    height: 100%;
+    overflow:visible!important;
+/*    transform: scale(4) translate(0%,25%);*/ 
+ }
+  .wrapperEarth{
+    display: none;
+    position: absolute;
+    bottom: -45%;
+    left: 0%;
+    right: 0%;
+    top: -45%;
+/*    top:-900px;
+    bottom:-900px;*/
+  }
+  canvas{
+    
+    top: 600px;
+    position: relative;
+  }
+
+  @media(min-width: 768px){
+    .wrapperEarth{
+      display:block;
+       
+    }
+  }
+  @keyframes rotate {
+    from { background-position-x: 0%; }
+    to { background-position-x:2100px; }
+  }
+    </style>
+    <div class="wrapperEarth">
+      <!-- <div class="clouds"></div> -->
+      <!-- <div class="earth"></div> -->
+      <div id="earth_div"></div>
+    </div>
+  </template>
+<script src="http://www.webglearth.com/v2/api.js"></script>
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'cg-earth',
+
+        properties: {
+
+        },
+        attached: function(){
+          //lazyload del bg
+          // this.$$('.earth').style.backgroundImage = 'url(images/earth.png)';
+          //console.warn('dd',this.$$('.earth').style);
+
+           var w = window.innerWidth;
+           var h = window.innerHeight;
+          // var percentW = (1400 * 60)/w;
+          // var percentH = (900 * 60)/h;
+
+         // this.$$('.wrapperEarth').style.bottom = '-' + percentW + '%'; 
+          //this.$$('.wrapperEarth').style.top    = '-' + percentH + '%'; 
+          function initialize(){
+            var options = {'scrollWheelZoom':false, position: [40.19537,8.524404], zoom:4.5}
+            var earth = new WE.map('earth_div',options);
+            // earth.setView([0, 0], 3);
+            WE.tileLayer('http://data.webglearth.com/natural-earth-color/{z}/{x}/{y}.jpg', {
+              tileSize: 256,
+              bounds: [[-85, -180], [85, 180]],
+              minZoom: 1,
+              maxZoom: 15,
+
+              tms: true
+            }).addTo(earth);
+            
+            var before = null;
+            requestAnimationFrame(function animate(now) {
+                var c = earth.getPosition();
+                var elapsed = before? now - before: 0;
+                before = now;
+                earth.setCenter([c[0], c[1] + 0.1*(elapsed/30)]);
+                requestAnimationFrame(animate);
+            });            
+          }
+          initialize();  
+           
+        },
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,115 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+<link rel="import" href="../../bower_components/paper-button/paper-button.html">
+
+<link rel="import" href="../cl-core-drag-element/cl-core-drag-element.html">
+
+<link rel="import" href="../cl-core-drop-element/cl-core-drop-element.html">
+
+<link rel="import" href="../cl-comp-api/cl-comp-api.html">
+
+
+<dom-module id="cl-core-drag-drop">
+  <template>
+    <style include="shared-styles"></style>
+    <style>
+      .box {
+        display: inline-block; width: 100px; height: 100px; margin: 16px;
+      }
+      .dropped {
+        position: absolute; border: 1px solid black; width: 5px; height: 5px;
+      }
+/*      :host ::content cl-core-drag-element {
+        display: block; float: none;
+      }*/
+    </style>
+    <paper-material elevation="1">
+      <cl-comp-api 
+      get="[[queryComp]]"
+      get-response="{{comp}}">
+      </cl-comp-api>
+
+      <cl-comp-api 
+      search=""
+      search-response="{{allComps}}">
+      </cl-comp-api>
+      <template is="dom-repeat" items="[[allComps]]" as="actualComp">
+        <paper-button raised on-tap="_handleGet">[[actualComp.comp_subtype_ctip_id]]</paper-button>
+      </template>
+      <div>
+          <h2 class="page-title"><span>Drop Zone</span></h2>
+          <div style="overflow: hidden;">
+            <section style="float: left; width: 50%;">
+              <template is="dom-repeat" items="[[allComps]]" as="actualComp">
+                <cl-core-drag-element
+                  type-element="[[actualComp]]"
+                >
+                </cl-core-drag-element>
+              </template>
+            </section>
+
+            <section style="float: left; width: 50%;">
+              <cl-core-drop-element>
+
+              </cl-core-drop-element>
+              <cl-core-drop-element>
+
+              </cl-core-drop-element>
+            </section>
+          </div>
+      </div>
+    </paper-material>
+
+  </template>
+
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'cl-core-drag-drop',
+
+        properties: {
+          search: {
+            type: String,
+            notify: true,
+            observer: '_dropObserver'
+          },
+          comp: {
+            type: Array,
+            notify: true,
+            observer: '_componentsObserver'
+          },
+          allComps: {
+            type: Array,
+            notify: true,
+            observer: '_allComponentsObserver'
+          }
+        },
+
+        ready: function(){
+          console.log('generado core drag drop');
+        },
+
+        _handleGet: function () {
+          console.log(arguments[0].model);
+          this.queryComp = {
+            components: arguments[0].model._aboveConfig.actualComp.comp_id,
+            // select: '*',
+            container: true
+          }
+        },
+
+        _componentsObserver : function () {
+            console.log('recibido _componentsObserver', this.comp);
+        },
+
+        _allComponentsObserver : function () {
+          console.log('recibido _allComponentsObserver', this.allComps);
+        }
+
+      });
+
+    })();
+  </script>
+
+</dom-module>

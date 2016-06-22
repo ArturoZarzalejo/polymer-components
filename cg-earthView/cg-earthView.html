@@ -1,0 +1,222 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
+<link href='https://fonts.googleapis.com/css?family=Roboto:100' rel='stylesheet' type='text/css'>
+
+<dom-module id="cg-earthView">
+  <template>
+    <style>
+    :host{
+      display: block;
+      position: relative;
+      margin:0px auto;
+      max-width: 1500px;
+      width: 100%;
+    }
+    .hide{
+      opacity: 0;
+    }
+    .countDownWrap{
+      display: none;
+    }
+    .show{
+      opacity: 1;
+    }
+      .wrap{
+        height: 1000px; /*polyfill*/
+        height: 100vh;
+        min-height: 100%;
+        width: 100%;
+        min-height: 100%;
+      }
+      .textWrap{
+        width: 100%;
+        position: absolute;
+        max-width:  930px;
+        left: 50%;
+        top: 30%;
+        transform: translate(-50%,-70%);
+        color:white;
+        transition:all 5s ease;
+      }
+      .cita{
+        font-style:italic;
+        font-size: 1.3em;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 100;
+      }
+      .titleText{
+        font-size: 2.5em;
+        font-family: 'Roboto', sans-serif;
+        font-weight: 100;
+      }
+/*      .countDownWrap{
+        display: none;
+        font-size: 8em;
+        text-align: center;
+        transform: translate(-50%,-50%);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        color:white;
+       
+      }*/
+  .designTeam{
+    width: 100%;
+    max-width: 600px;
+/*    margin: 40px auto;*/
+  }
+  cg-assistant{
+    position:absolute;
+  }
+/*@-webkit-keyframes countdown {
+    from {font-size: 1em;}
+    to {font-size: 8em;}
+} 
+keyframes countdown {
+    from {font-size: 1em;}
+    to {font-size: 8em;}
+} */
+
+    </style>
+    <cg-designTeam users="{{designers}}"></cg-designTeam>
+    <div class="designTeam">
+        <template is="dom-repeat" items="{{designers}}" as="designer">
+            <cg-assistant user='{{designer}}' style$="{{styleHandler(designer)}}}"></cg-assistant>
+        </template>
+    </div>
+    <div id="firstView"class="wrap">
+      
+      <div class="textWrap hide">
+        <p class="titleText">Diseñamos lo que veis, desarrollamos lo que usáis</p>
+        <p class="cita">Siempre estoy haciendo cosas que no sé hacer, de manera que tengo que aprender como hacerlo.</p>
+        <p class="author">Pablo Picasso</p>
+      </div>
+      <div class="countDownWrap hide">
+        <h2 class="countDown"> 10!</h2>
+      </div>
+<!--       <div class="earthWrap">
+        <div class="earthContent"></div>
+      </div> -->
+    </div>
+  </template>
+
+
+  <script>
+    (function() {
+      var wsUri = 'ws://browse.lab.cloudioo.net:11011';
+      var myWebSocket = new WebSocket(wsUri);
+      var interval;
+      Polymer({
+        is: 'cg-earthView',
+
+        properties: {
+        },
+        // listeners : {
+        //   'test.created':'keypressHandler'
+        // },
+        attached: function(){
+           var wrap = this.$$('.textWrap');
+           this.toggleClass('show',true,wrap);
+           var designers = this.querySelectorAll('cg-assistant');
+           var that = this;
+           var length = 0;
+           var prev;
+           // setTimeout(function(){
+           //    interval = setInterval(function(){
+           //      if(length>0){
+           //        designers[length-1].style.opacity = '0';
+           //      }
+           //      if(length == designers.length){
+           //        console.warn('restarting...');
+           //        length = 0;
+           //        //clearInterval(interval);
+           //      }
+           //      designers[length].style.opacity = '0.8';
+           //      length++;
+           //   },4000)
+           // },1000);
+           setTimeout(function(){
+              interval = setInterval(function(){
+                if(prev!==undefined){
+                  designers[prev].style.opacity = '0';
+                }
+                // if(length == designers.length){
+                //   console.warn('restarting...');
+                //   length = 0;
+                //   //clearInterval(interval);
+                // }
+                designers[length].style.opacity = '0.8';
+                prev = length;
+                while(length==prev){                  
+                  length = Math.floor(Math.random() * designers.length); 
+                }
+             },4000)
+           },1000);
+
+        },
+        ready: function(){
+          this.tabIndex = 0;
+          this.focus();
+          var that = this;
+          window.addEventListener('keypress',function(){
+            if(arguments[0].keyIdentifier == 'U+0033'){
+              clearInterval(interval)
+              document.querySelector('cg-audio').stopAll();
+              var wrap = that.$$('.textWrap');
+              wrap.style.transition = 'all 0.6s';
+              that.toggleClass('show',false,wrap);
+              var designers = that.querySelectorAll('cg-assistant');
+              for(var i=0;i<designers.length;i++){
+                designers[i].style.opacity = '0';
+              }
+              wrap.addEventListener('transitionend',function(){
+                console.warn(arguments[0].propertyName);
+                if(arguments[0].propertyName == 'opacity'){
+                  that.$$('.countDownWrap').style.display = 'block';
+                  wrap.style.display = 'none';
+
+                  //that.startCountdown();
+                  location.href = '#/assistants';
+
+                }
+              })
+              
+            }
+          })
+
+        },
+        startCountdown: function(){
+          console.warn('COUNTDOWN!');
+          this.$$('.countDownWrap').style.display = 'block';
+            //  this.toggleClass('show',false,this.$$('.textWrap'))
+           this.toggleClass('show',true,this.$$('.countDownWrap'))
+           var text = this.$$('.countDown');
+           var that = this;
+           var i = 10;
+           text.textContent = i.toString() + '!';
+           this.$$('.countDownWrap').style.animation = 'countdown 1s linear 11';
+           var interval = setInterval(function(){
+              i--;
+              text.textContent = i.toString() + '!';
+              if(i == 0){
+                setTimeout(function(){
+                  location.href = '#/assistants';
+                },1000);
+                clearInterval(interval);
+              }
+           },1000)
+        },
+        styleHandler : function(){
+          console.warn('styleHandler',arguments);
+          return 'left:' + arguments[0].position.x + ';top:' + arguments[0].position.y + ';opacity:0;transition:all 1s;'
+        }
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

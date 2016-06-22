@@ -1,0 +1,104 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+
+<dom-module id="cg-assistant">
+  <template>
+    <style>
+
+      p{
+        margin:0;
+        color:white;
+      }
+      .marco{
+        width: 100px;
+        padding-bottom: 100px;
+        border:1px solid black;
+        background-size:contain;
+        border-radius:50%;
+        /* Mask: */
+        /* border: 12px solid #ACF8A9; */
+        /*  box-shadow: 0px 0px 7px 9px #48F179; */
+        background:none;
+        transition:all 1s;
+        position:relative;
+
+      }
+      .marcoWrap{
+        width: 100px;
+        height: 100px;
+        float: left;
+      }
+    </style>
+
+    <div class="marcoWrap">
+      <div class="marco"></div>
+    </div>
+  </template>
+
+
+  <script>
+    (function() {
+      var newUser;
+      Polymer({
+        is: 'cg-assistant',
+
+        properties: {
+          user:{
+            type:Object,
+            notify:true,
+
+          },
+          selected:{
+            type:String,
+          }
+        },
+        observers : [
+          'assistanceManager(user.*)'
+        ],
+
+        attached : function(){
+         if(this.selected === undefined){
+          this.user[0] = this.user;
+          this.selected = 0;
+         }
+         if(this.user[this.selected].assists == true){
+            this.$$('.marco').style.border = '12px solid #ACF8A9';
+            this.$$('.marco').style.boxShadow = '0px 0px 7px 9px #48F179';
+         }
+         
+     
+          this.$$('.marco').style.backgroundImage = 'url(' +this.user[this.selected].photo+')';
+          this.$$('.marco').style.backgroundSize =  'contain';
+          var that = this;
+
+
+        },
+        assistanceManager: function(){
+         
+          
+          if((arguments[0].base[this.selected] && arguments[0].base[this.selected].assists) || arguments[0] == 'setTrue'){
+            this.$$('.marco').style.border = '12px solid #ACF8A9';
+            this.$$('.marco').style.boxShadow = '0px 0px 7px 9px #48F179';
+            this.$$('.marco').style.marginTop = '-12px';
+            this.$$('.marco').style.marginLeft = '-12px';
+            
+          }else{
+            this.$$('.marco').style.borderWidth = '0px';
+            this.$$('.marco').style.boxShadow = 'none';
+            this.$$('.marco').style.marginTop = '';
+            this.$$('.marco').style.marginLeft = '';
+          }
+          
+        },
+
+
+      })
+    })();
+  </script>
+
+<script>
+
+</script>
+</dom-module>

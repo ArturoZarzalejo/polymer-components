@@ -1,0 +1,130 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="cg-designTeam">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+
+
+    </style>
+
+  </template>
+
+
+  <script>
+    (function() {
+
+      Polymer({
+
+        is: 'cg-designTeam',
+
+        properties: {
+          users : {
+            type : Array,
+            notify: true,
+            value: [
+
+              {
+                name    : 'David',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/dmurillo.jpg',
+                position: {x:'70%',y:'40%'}
+              },
+              {
+                name    : 'Arturo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/azarzalejo.jpg',
+                position: {x:'20%',y:'40%'}
+              },
+               {
+                name    : 'Enzo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/vpetti@telecoming.com.jpg',
+                position: {x:'50%',y:'45%'}
+              },              
+              {
+                name    : 'Miguel',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/mamonteagudo@telecoming.com.jpg',
+                position: {x:'25%',y:'55%'}
+              },
+              {
+                name    : 'José',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/jmcasabona.jpg',
+                position: {x:'85%',y:'55%'}
+              },
+
+              {
+                name    : 'Cristina',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/clozano.jpg',
+                position: {x:'65%',y:'55%'}
+              },              
+              {
+                name    : 'JoseLuis',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/jlopez@telecoming.com.jpg',
+                position: {x:'10%',y:'60%'}
+              },
+              {
+                name    : 'Victor',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/vmherrera@telecoming.com.jpg',
+                position: {x:'10%',y:'5%'}
+              },              
+              {
+                name    : 'Sara',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/sagapito.jpg',
+                position: {x:'80%',y:'25%'}
+              },
+              {
+                name    : 'Daniel',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/dciudad@telecoming.com.jpg',
+                position: {x:'35%',y:'5%'}
+              },
+              {
+                name    : 'Dani',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/dsantiago@telecoming.com.jpg',
+                position: {x:'60%',y:'5%'}
+              },
+
+              {
+                name    : 'Pablo',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/psande@telecoming.com.jpg',
+                position: {x:'5%',y:'25%'}
+              },
+              {
+                name    : 'Ana',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/aropero.jpg',
+                position: {x:'40%',y:'40%'}
+              },
+              {
+                name    : 'Bryan',
+                photo   : 'http://egt-lab-design.s3.amazonaws.com/empleados/450x450/bacero@telecoming.com.jpg',
+                position: {x:'85%',y:'10%'}
+              },              
+
+
+
+            ]
+          },
+
+        },
+
+
+        ready : function(){
+
+
+        },
+
+
+
+
+
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

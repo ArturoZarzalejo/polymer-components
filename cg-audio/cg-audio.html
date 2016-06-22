@@ -1,0 +1,89 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+
+<dom-module id="cg-audio">
+  <template>
+    <style>
+    :host{
+      position: relative;
+    }
+
+
+    </style>
+      <audio id='countdown' src="../../../assets/countdown.mp3"></audio>
+      <audio id='odisea'    src="../../../assets/odisea.mp3"></audio>
+  </template>
+
+
+  <script>
+    (function() {
+
+      Polymer({
+
+        is: 'cg-audio',
+
+        properties: {
+          users : {
+            type : Object,
+            notify: true,
+
+          },
+
+        },
+
+
+        ready : function(){
+          var that = this;
+           var audioHandler = function(){
+            console.warn('keypress',arguments);
+            console.warn('argumentsAudio',arguments[0].keyIdentifier);
+            if(arguments[0].keyIdentifier == 'U+0034'){
+              console.warn('Playing countdown');
+              //that.$$('#odisea').pause();
+              that.$$('#countdown').play();
+            }
+            if(arguments[0].keyIdentifier == 'U+0031'){
+              console.warn('Playing Odisea');
+              that.$$('#countdown').pause();
+              that.$$('#odisea').play();
+            }
+            if(arguments[0].keyIdentifier == 'U+0032'){
+              console.warn('Stop');
+              that.$$('#countdown').pause();
+              that.$$('#odisea').pause();
+            }
+            if(arguments[0].keyIdentifier == 'U+0030'){
+              console.warn('Emergencia!');
+              var assistants = document.querySelector('orion-users');
+              console.warn(assistants);
+              for (var i = 0; i < assistants.users.length; i++) {
+                console.warn('here');
+                assistants.set('users.'+i+'.assists',true);
+              };
+
+              
+            }                          
+           }
+           window.addEventListener('keypress',audioHandler)
+          //that.$$('#countdown').play();
+        },
+        stopAll : function(){
+              this.$$('#countdown').pause();
+              this.$$('#odisea').pause();
+        }
+
+
+
+
+
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>

@@ -1,0 +1,88 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+
+
+<dom-module id="cg-mobileSelected">
+  <template>
+    <style>
+      :host{
+        position: relative;
+      }
+
+      .megaWrap{
+        height: 1000px; /*polyfill*/
+        height: 100vh;
+        min-height: 100%;
+        width: 100%;
+        overflow: hidden;
+      }
+      .contentWrap{
+        transition:all 3s;
+      }
+      .hide{
+        opacity: 0;
+      }
+      .show{
+        opacity: 1;
+      }
+      p{
+        color:white;
+      }
+      .usersWrap{
+        width: 100%;
+        max-width: 500px;
+        margin:0px auto;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      cg-assistant{
+        margin:2em;
+      }
+    </style>
+    <div class="megaWrap">
+      <div class="contentWrap hide">
+        <orion-users users='{{allUsers}}'></orion-users>
+        <div class="usersWrap">
+          <template is="dom-repeat" items="{{allUsers}}" as="user">
+              <template is="dom-if" if="{{user.assists}}">
+                <cg-assistant user='{{user}}'></cg-assistant>
+              </template>
+          </template>
+        </div>
+      </div>
+    </div>
+  </template>
+
+
+  <script>
+    (function() {
+      Polymer({
+        is: 'cg-mobileSelected',
+
+        properties: {
+          allUsers: {
+            type: Array,
+            notify: true,    
+          }
+        },
+
+        attached: function(){
+
+           var wrap = this.$$('.contentWrap');
+           var that = this;
+          
+            that.toggleClass('show',true,wrap);  
+       
+           
+        },
+
+
+
+
+
+
+      })
+    })();
+  </script>
+
+</dom-module>
